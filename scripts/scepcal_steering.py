@@ -18,24 +18,23 @@ SIM.macroFile = ""
 opticalPhysics = False
 
 # SIM.inputFiles = ['examples/wzp6_ee_ZZ_test_ecm240_1k.stdhep']
-# SIM.outputFile = 'examples/wzp6_ee_ZZ_test_ecm240_n1_cut0_BEonly.root'
+SIM.outputFile = 'gamma_10MeV_noopt.root'
 SIM.numberOfEvents = 1
 SIM.skipNEvents = 0
 
 SIM.gun.multiplicity = 1
-# SIM.gun.position = (0, 0, 0)  #(0, 0, -50.0*mm)  #(0, 0, 50.0*mm)  #(0, 0, 0)
-# SIM.gun.direction = (1, 1, 0)
+SIM.gun.position = (0, 0, 0)  #(0, 0, -50.0*mm)  #(0, 0, 50.0*mm)  #(0, 0, 0)
+SIM.gun.direction = (1, 1, 1)
 # SIM.gun.isotrop = False
 # SIM.gun.distribution = 'uniform'
-# SIM.gun.energy = 10*GeV
-# SIM.gun.particle = "gamma"
-SIM.gun.momentumMin = 10.0*GeV-10*keV  #10.00000*GeV
-SIM.gun.momentumMax = 10.0*GeV+10*keV  #10.00001*GeV
+SIM.gun.energy = 10*MeV
+SIM.gun.particle = "gamma"
+# SIM.gun.momentumMin = 10.0*MeV-10*keV  #10.00000*GeV
+# SIM.gun.momentumMax = 10.0*MeV+10*keV  #10.00001*GeV
 # SIM.gun.phiMin = 10*pi/180.0
 # SIM.gun.phiMax = 10*pi/180.0
 # SIM.gun.thetaMin = (90-10)*pi/180.0  
 
-SIM.action.calo = "SCEPCalSDAction_DRHit"
 def setupEDM4hepOutputDR(dd4hepSimulation):
      from DDG4 import EventAction, Kernel
      dd = dd4hepSimulation
@@ -69,8 +68,11 @@ SIM.filter.filters = {
                  'parameter':{'Cut':0.0}}
 }
 
+SIM.action.calo = "SCEPCalSDAction_DRHit"
 SIM.action.calorimeterSDTypes = ['SegmentedCrystalCalorimeter']
-SIM.filter.calo = "edep1keV"
+
+SIM.filter.calo = "edep0"
+print(f'Using filter {SIM.filter.calo} !')
 
 SIM.action.trackerSDTypes = ['tracker']
 SIM.action.tracker = (
@@ -80,7 +82,7 @@ SIM.action.tracker = (
           'CollectSingleDeposits':False
      }
 )
-SIM.filter.tracker = "edep0"
+SIM.filter.tracker = "edep1keV"
 
 SIM.part.enableDetailedHitsAndParticleInfo = False
 SIM.part.keepAllParticles = True

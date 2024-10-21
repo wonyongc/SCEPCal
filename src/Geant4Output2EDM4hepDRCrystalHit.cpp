@@ -23,7 +23,7 @@ namespace dd4hep {
 
   namespace sim {
 
-    class  Geant4ParticleMap;
+    class Geant4ParticleMap;
 
     class Geant4Output2EDM4hepDRCrystalHit : public Geant4OutputAction  {
     protected:
@@ -364,7 +364,7 @@ void Geant4Output2EDM4hepDRCrystalHit::saveEvent(OutputContext<G4Event>& ctxt)  
     eventNumber = parameters->eventNumber() + eventNumberOffset;
     parameters->extractParameters(m_frame);
     #if podio_VERSION_MAJOR > 0 || podio_VERSION_MINOR > 16 || podio_VERSION_PATCH > 2
-    eventWeight = m_frame.getParameter<double>("EventWeights");
+    eventWeight = m_frame.getParameter<double>("EventWeights").value_or(0.0);
     #endif
   } else {
     runNumber = m_runNo + runNumberOffset;
@@ -457,24 +457,17 @@ void Geant4Output2EDM4hepDRCrystalHit::saveCollection(OutputContext<G4Event>& /*
       const DRCrystalHit* hit = coll->hit(i);
 
       const auto& pos = hit->position;
-      edm4hep::Vector3f hitpos( float(pos.x()/CLHEP::mm), float(pos.y()/CLHEP::mm), float(pos.z()/CLHEP::mm) );
+      edm4hep::Vector3f hitpos( 10*pos.x(), 10*pos.y(), 10*pos.z() ); // returns in cm, convert to mm
 
       sch.setCellID( hit->cellID );
       sch.setPosition( hitpos );
-      sch.setEta( hit->eta );
-      sch.setPhi( hit->phi );
-      sch.setDepth( hit->depth );
-      sch.setSystem( hit->system );
       sch.setEnergy( hit->energyDeposit/CLHEP::GeV );
 
-      sch.setNcerenkov( hit->ncerenkov );
-      sch.setNscintillator( hit->nscintillator );
+      sch.setNCerenkovProd(     hit->nCerenkovProd );
+      sch.setNScintillationProd(hit->nScintillationProd );
 
-      sch.setNwavelen_cer( hit->nwavelen_cer );
-      sch.setNwavelen_scint( hit->nwavelen_scint );
-      
-      sch.setNtime_cer( hit->ntime_cer );
-      sch.setNtime_scint( hit->ntime_scint );
+      sch.setTAvgC( hit->tSumC / hit->nCerenkovProd );
+      sch.setTAvgS( hit->tSumS / hit->nScintillationProd );
 
       for(auto ci=hit->truth.begin(); ci != hit->truth.end(); ++ci){
 
