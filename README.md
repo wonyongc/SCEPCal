@@ -228,7 +228,7 @@ Python classes and functions to unpack and use the hdf5 file are provided in `sc
 ```python
 from scepcal import *
 
-hdf5file = 'wzp6_ee_ZZ_test_ecm240_n1.hdf5'
+hdf5file = 'gamma_10GeV_n10_isotrop.hdf5'
 SDhits_allevents, MCP_allevents = load_allevents_from_hdf5(hdf5file)
 SDhits = SDhits_allevents[0] #event number 0
 MCcoll = MCP_allevents[0]
