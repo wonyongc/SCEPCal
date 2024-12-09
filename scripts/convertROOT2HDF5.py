@@ -90,6 +90,34 @@ class RawHit():
         self.theta            = acos(self.z / self.r) if self.r != 0 else 0
         self.phi              = atan2(self.y, self.x)
 
+class RawHitSimple():
+    def __init__(self, hit):
+        self.cellID           = hit.cellID
+        self.E                = hit.energy
+        self.x                = hit.position.x
+        self.y                = hit.position.y
+        self.z                = hit.position.z
+
+        # convert from readout bits
+        # <id>system:4,eta:11,phi:11,depth:4</id>
+        self.system           = hit.system
+        self.neta             = hit.eta
+        self.nphi             = hit.phi
+        self.ndepth           = hit.depth
+
+        self.ncerenkovprod      = hit.ncerenkovprod
+        self.nscintillationprod = hit.nscintillationprod
+        self.ncerenkovdet       = hit.ncerenkovdet
+        self.nscintillationdet  = hit.nscintillationdet
+        self.tavgc              = hit.tavgc
+        self.tavgs              = hit.tavgs
+        self.tmeasc             = hit.tmeasc
+        self.tmeas              = hit.tmeass
+
+        self.r                = sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
+        self.theta            = acos(self.z / self.r) if self.r != 0 else 0
+        self.phi              = atan2(self.y, self.x)
+
 class HitCollection():
     def __init__(self, rawhits):
         self.hits             = np.array(rawhits)
@@ -116,6 +144,35 @@ class HitCollection():
         for hit in self.hits:
             yield hit
 
+class HitCollectionSimple():
+    # Takes python array of RawHitSimple
+    def __init__(self, rawhits):
+        self.hits                = np.array(rawhits)
+        self.N                   = len(rawhits)
+        self.cellID              = np.array([hit.cellID              for hit in self.hits])
+        self.E                   = np.array([hit.E                   for hit in self.hits])
+        self.x                   = np.array([hit.x                   for hit in self.hits])
+        self.y                   = np.array([hit.y                   for hit in self.hits])
+        self.z                   = np.array([hit.z                   for hit in self.hits])
+        self.system              = np.array([hit.system              for hit in self.hits])
+        self.neta                = np.array([hit.neta                for hit in self.hits])
+        self.nphi                = np.array([hit.nphi                for hit in self.hits])
+        self.ndepth              = np.array([hit.ndepth              for hit in self.hits])
+        self.ncerenkovprod       = np.array([hit.ncerenkovprod       for hit in self.hits])
+        self.nscintillationprod  = np.array([hit.nscintillationprod  for hit in self.hits])
+        self.ncerenkovdet        = np.array([hit.ncerenkovdet        for hit in self.hits])
+        self.nscintillationdet   = np.array([hit.nscintillationdet   for hit in self.hits])
+        self.tavgc               = np.array([hit.tavgc               for hit in self.hits])
+        self.tavgs               = np.array([hit.tavgs               for hit in self.hits])
+        self.tmeasc              = np.array([hit.tmeasc              for hit in self.hits])
+        self.tmeass              = np.array([hit.tmeass              for hit in self.hits])
+        self.r                = np.array([hit.r                      for hit in self.hits])
+        self.theta            = np.array([hit.theta                  for hit in self.hits])
+        self.phi              = np.array([hit.phi                    for hit in self.hits])
+    def __iter__(self):
+        for hit in self.hits:
+            yield hit
+
 
 def getHitsForAllEvents(fname):
     f = TFile.Open(fname)
@@ -127,7 +184,7 @@ def getHitsForAllEvents(fname):
         SDhitlayer  = event.SCEPCal_readout
         MClayer     = event.MCParticles
 
-        SDhitsForEvent[i]      = HitCollection([RawHit(hit) for hit in SDhitlayer]) if SDhitlayer else None
+        SDhitsForEvent[i]      = HitCollection([RawHitSimple(hit) for hit in SDhitlayer]) if SDhitlayer else None
         MCParticlesForEvent[i] = MCCollection([MCParticle(mcp) for mcp in MClayer])
 
     return SDhitsForEvent, MCParticlesForEvent
@@ -160,7 +217,7 @@ def save_allevents_to_hdf5(SDhits_allevents, MCP_allevents, filename):
                 'nphi': 'int32',
                 'ndepth': 'int32',
                 'ncerenkov': 'int32',
-                'nscintillator': 'int32',
+                'nscintillation': 'int32',
                 'nwavelen_cer': 'int32',
                 'nwavelen_scint': 'int32',
                 'ntime_cer': 'int32',
@@ -169,8 +226,31 @@ def save_allevents_to_hdf5(SDhits_allevents, MCP_allevents, filename):
                 'theta': 'float32',
                 'phi': 'float32'
             }
-            
-            for attr, dtype in hit_attrs.items():
+                    
+            hit_attrs_simple = {
+                'cellID': 'uint64',
+                'E': 'float32',
+                'x': 'float32',
+                'y': 'float32',
+                'z': 'float32',
+                'system': 'int32',
+                'neta': 'int32',
+                'nphi': 'int32',
+                'ndepth': 'int32',
+                'ncerenkovprod': 'int32',
+                'nscintillationprod': 'int32',
+                'ncerenkovdet': 'int32',
+                'nscintillationdet': 'int32',
+                'tavgc': 'float32',
+                'tavgs': 'float32',
+                'tmeasc': 'float32',
+                'tmeass': 'float32',
+                'r': 'float32',
+                'theta': 'float32',
+                'phi': 'float32'
+            }    
+
+            for attr, dtype in hit_attrs_simple.items():
                 data = getattr(hc, attr)
                 
                 if attr in ['nwavelen_cer', 'nwavelen_scint', 'ntime_cer', 'ntime_scint']:

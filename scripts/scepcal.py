@@ -63,51 +63,64 @@ class MCCollection():
             yield mcp
 
 class RawHit():
+    # Takes edm4hep SimCalorimeterDRHitSimple
     def __init__(self, hit):
         self.cellID           = hit.cellID
         self.E                = hit.energy
         self.x                = hit.position.x
         self.y                = hit.position.y
         self.z                = hit.position.z
+
+        # convert from readout bits
+        # <id>system:4,eta:11,phi:11,depth:4</id>
         self.system           = hit.system
         self.neta             = hit.eta
         self.nphi             = hit.phi
         self.ndepth           = hit.depth
-        self.ncerenkov        = hit.ncerenkov
-        self.nscintillator    = hit.nscintillator
-        self.nwavelen_cer     = np.array(hit.nwavelen_cer)
-        self.nwavelen_scint   = np.array(hit.nwavelen_scint)
-        self.ntime_cer        = np.array(hit.ntime_cer)
-        self.ntime_scint      = np.array(hit.ntime_scint)
+
+        self.ncerenkovprod      = hit.ncerenkovprod
+        self.nscintillationprod = hit.nscintillationprod
+        self.ncerenkovdet       = hit.ncerenkovdet
+        self.nscintillationdet  = hit.nscintillationdet
+        self.tavgc              = hit.tavgc
+        self.tavgs              = hit.tavgs
+        self.tmeasc             = hit.tmeasc
+        self.tmeas              = hit.tmeass
+
         self.r                = sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
         self.theta            = acos(self.z / self.r) if self.r != 0 else 0
         self.phi              = atan2(self.y, self.x)
+        # self.contribs = hit.contributions  # one-to-many relations not implemented in python classes
 
 class HitCollection():
+    # Takes python array of RawHitSimple
     def __init__(self, rawhits):
-        self.hits             = np.array(rawhits)
-        self.N                = len(rawhits)
-        self.cellID           = np.array([hit.cellID                   for hit in self.hits])
-        self.E                = np.array([hit.E                        for hit in self.hits])
-        self.x                = np.array([hit.x                        for hit in self.hits])
-        self.y                = np.array([hit.y                        for hit in self.hits])
-        self.z                = np.array([hit.z                        for hit in self.hits])
-        self.system           = np.array([hit.system                   for hit in self.hits])
-        self.neta             = np.array([hit.neta                     for hit in self.hits])
-        self.nphi             = np.array([hit.nphi                     for hit in self.hits])
-        self.ndepth           = np.array([hit.ndepth                   for hit in self.hits])
-        self.ncerenkov        = np.array([np.array(hit.ncerenkov)      for hit in self.hits])
-        self.nscintillator    = np.array([np.array(hit.nscintillator)  for hit in self.hits])
-        self.nwavelen_cer     = np.array([np.array(hit.nwavelen_cer)   for hit in self.hits])
-        self.nwavelen_scint   = np.array([np.array(hit.nwavelen_scint) for hit in self.hits])
-        self.ntime_cer        = np.array([np.array(hit.ntime_cer)      for hit in self.hits])
-        self.ntime_scint      = np.array([np.array(hit.ntime_scint)    for hit in self.hits])
-        self.r                = np.array([hit.r                        for hit in self.hits])
-        self.theta            = np.array([hit.theta                    for hit in self.hits])
-        self.phi              = np.array([hit.phi                      for hit in self.hits])
+        self.hits                = np.array(rawhits)
+        self.N                   = len(rawhits)
+        self.cellID              = np.array([hit.cellID              for hit in self.hits])
+        self.E                   = np.array([hit.E                   for hit in self.hits])
+        self.x                   = np.array([hit.x                   for hit in self.hits])
+        self.y                   = np.array([hit.y                   for hit in self.hits])
+        self.z                   = np.array([hit.z                   for hit in self.hits])
+        self.system              = np.array([hit.system              for hit in self.hits])
+        self.neta                = np.array([hit.neta                for hit in self.hits])
+        self.nphi                = np.array([hit.nphi                for hit in self.hits])
+        self.ndepth              = np.array([hit.ndepth              for hit in self.hits])
+        self.ncerenkovprod       = np.array([hit.ncerenkovprod       for hit in self.hits])
+        self.nscintillationprod  = np.array([hit.nscintillationprod  for hit in self.hits])
+        self.ncerenkovdet        = np.array([hit.ncerenkovdet        for hit in self.hits])
+        self.nscintillationdet   = np.array([hit.nscintillationdet   for hit in self.hits])
+        self.tavgc               = np.array([hit.tavgc               for hit in self.hits])
+        self.tavgs               = np.array([hit.tavgs               for hit in self.hits])
+        self.tmeasc              = np.array([hit.tmeasc              for hit in self.hits])
+        self.tmeass              = np.array([hit.tmeass              for hit in self.hits])
+        self.r                = np.array([hit.r                      for hit in self.hits])
+        self.theta            = np.array([hit.theta                  for hit in self.hits])
+        self.phi              = np.array([hit.phi                    for hit in self.hits])
     def __iter__(self):
         for hit in self.hits:
             yield hit
+
 
 class RawHit_h5:
     def __init__(self, hit):
@@ -121,7 +134,7 @@ class RawHit_h5:
         self.nphi             = hit['nphi']
         self.ndepth           = hit['ndepth']
         self.ncerenkov        = hit['ncerenkov']
-        self.nscintillator    = hit['nscintillator']
+        self.nscintillation    = hit['nscintillation']
         self.nwavelen_cer     = hit['nwavelen_cer']
         self.nwavelen_scint   = hit['nwavelen_scint']
         self.ntime_cer        = hit['ntime_cer']
