@@ -20,7 +20,7 @@ datatypes :
       - int32_t depth                        // detector cell depth
       - int32_t system                       // detector cell system
       - int32_t ncerenkov                    // number of cerenkov hits
-      - int32_t nscintillator                // number of scint hits
+      - int32_t nscintillation               // number of scint hits
       - std::array<int32_t, 6000> nwavelen_cer                 // number of cerenkov wavelength hits
       - std::array<int32_t, 6000> nwavelen_scint               // number of scint wavelength hits
       - std::array<int32_t, 6000> ntime_cer                    // number of cerenkov time hits
@@ -28,37 +28,22 @@ datatypes :
     OneToManyRelations:
       - edm4hep::CaloHitContribution contributions  // Monte Carlo step contributions
 
-  # ------------- DRSimCalorimeterHit
-  edm4dr::SimDRCrystalHit:
-    Description: "Simulated dual-readout calorimeter hit"
+  # ------------- SimDRCalorimeterHitSimple
+  edm4dr::SimDRCalorimeterHitSimple:
+    Description: "Simulated simple dual-readout calorimeter hit"
     Author: "Wonyong Chung"
     Members:
       - uint64_t cellID                      // detector cellID
       - float energy [GeV]                   // energy of the hit
       - edm4hep::Vector3f position [mm]      // position of the calorimeter cell in world coords
-      - int32_t eta                          // detector cell eta
-      - int32_t phi                          // detector cell phi
-      - int32_t depth                        // detector cell depth
-      - int32_t system                       // detector cell system
-      - int32_t ncerenkov                    // number of cerenkov hits
-      - int32_t nscintillator                // number of scint hits
+      - int32_t ncerenkovprod                // number of cerenkov hits produced
+      - int32_t nscintillationprod           // number of scint hits produced
+      - int32_t ncerenkovdet                 // number of cerenkov hits detected
+      - int32_t nscintillationdet            // number of scint hits detected
+      - float tavgc [ns]                     // avg arrival time for cerenkov photons
+      - float tavgs [ns]                     // avg arrival time for scint photons
+      - float tmeasc [ns]                    // avg measured time for cerenkov photons
+      - float tmeass [ns]                    // avg measured time for scint photons
+
     OneToManyRelations:
       - edm4hep::CaloHitContribution contributions  // Monte Carlo step contributions
-
-  # ------------- DRSimCalorimeterHit
-  edm4dr::SimDRSiPMHit:
-    Description: "Simulated dual-readout calorimeter hit"
-    Author: "Wonyong Chung"
-    Members:
-      - uint64_t cellID                      // detector cellID
-      - edm4hep::Vector3f position [mm]      // position of the calorimeter cell in world coords
-      - int32_t eta                          // detector cell eta
-      - int32_t phi                          // detector cell phi
-      - int32_t depth                        // detector cell depth
-      - int32_t system                       // detector cell system
-      - int32_t ncerenkov                    // number of cerenkov hits
-      - int32_t nscintillator                // number of scint hits
-      - std::array<int32_t, 6000> nwavelen_cer                 // number of cerenkov wavelength hits
-      - std::array<int32_t, 6000> nwavelen_scint               // number of scint wavelength hits
-      - std::array<int32_t, 6000> ntime_cer                    // number of cerenkov time hits
-      - std::array<int32_t, 6000> ntime_scint                  // number of scint hits

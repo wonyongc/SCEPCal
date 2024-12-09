@@ -19,7 +19,7 @@ using namespace std;
 using namespace SCEPCal;
 
 DRCrystalHit::DRCrystalHit()
-: Geant4HitData(), position(), truth(), energyDeposit(0), eta(0), phi(0), depth(0), system(0), ncerenkov(0), nscintillator(0) {
+: Geant4HitData(), position(), truth(), energyDeposit(0), eta(0), phi(0), depth(0), system(0), ncerenkov(0), nscintillation(0) {
 
   InstanceCount::increment(this);
 
@@ -32,7 +32,7 @@ DRCrystalHit::DRCrystalHit()
 }
 
 DRCrystalHit::DRCrystalHit(const Position& pos)
-: Geant4HitData(), position(pos), truth(), energyDeposit(0), eta(0), phi(0), depth(0), system(0), ncerenkov(0), nscintillator(0) {
+: Geant4HitData(), position(pos), truth(), energyDeposit(0), eta(0), phi(0), depth(0), system(0), ncerenkov(0), nscintillation(0) {
 
   InstanceCount::increment(this);
 
@@ -45,5 +45,24 @@ DRCrystalHit::DRCrystalHit(const Position& pos)
 }
 
 DRCrystalHit::~DRCrystalHit() {
+  InstanceCount::decrement(this);
+}
+
+
+DRCrystalHitSimple::DRCrystalHitSimple()
+: Geant4HitData(), position(), truth(), energyDeposit(0), nCerenkovProd(0), nScintillationProd(0),nCerenkovDet(0), nScintillationDet(0), tAvgC(0), tAvgS(0), tMeasC(0), tMeasS(0) {
+
+  InstanceCount::increment(this);
+
+}
+
+DRCrystalHitSimple::DRCrystalHitSimple(const Position& pos)
+: Geant4HitData(), position(pos), truth(), energyDeposit(0), nCerenkovProd(0), nScintillationProd(0),nCerenkovDet(0), nScintillationDet(0), tAvgC(0), tAvgS(0), tMeasC(0), tMeasS(0) {
+
+  InstanceCount::increment(this);
+
+}
+
+DRCrystalHitSimple::~DRCrystalHitSimple() {
   InstanceCount::decrement(this);
 }

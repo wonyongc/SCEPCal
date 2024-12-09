@@ -36,7 +36,7 @@ namespace SCEPCal {
         int system;
         
         int ncerenkov;
-        int nscintillator;
+        int nscintillation;
 
         int nbins=nsipmbins;
         
@@ -61,6 +61,41 @@ namespace SCEPCal {
         DRCrystalHit& operator=(DRCrystalHit&& c) = delete;
         DRCrystalHit& operator=(const DRCrystalHit& c) = delete;
     };
+
+    class DRCrystalHitSimple : public dd4hep::sim::Geant4HitData {
+
+      public:
+        typedef dd4hep::sim::Geant4HitData base_t;
+
+        Position      position;
+        
+        Contributions truth;
+        
+        double        energyDeposit;
+        
+        int           nCerenkovProd;
+        int           nScintillationProd;
+
+        int           nCerenkovDet;
+        int           nScintillationDet;
+
+        double        tAvgC;
+        double        tAvgS;
+
+        double        tMeasC;
+        double        tMeasS;
+        
+        
+      public:
+        DRCrystalHitSimple();
+        DRCrystalHitSimple(DRCrystalHitSimple&& c) = delete;
+        DRCrystalHitSimple(const DRCrystalHitSimple& c) = delete;
+        DRCrystalHitSimple(const Position& cell_pos);
+        virtual ~DRCrystalHitSimple();
+        DRCrystalHitSimple& operator=(DRCrystalHitSimple&& c) = delete;
+        DRCrystalHitSimple& operator=(const DRCrystalHitSimple& c) = delete;
+    };
+
 };
 
 #if defined(__CINT__) || defined(__MAKECINT__) || defined(__CLING__) || defined(__ROOTCLING__)

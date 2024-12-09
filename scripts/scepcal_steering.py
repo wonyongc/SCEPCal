@@ -15,6 +15,9 @@ SIM.output.random = 7
 SIM.compactFile = ['compact/SCEPCal.xml']
 SIM.macroFile = ""
 
+hitType = 'Simple' # 'Full'
+print (f'Using hit type {hitType} !')
+
 opticalPhysics = False
 
 # SIM.inputFiles = ['examples/wzp6_ee_ZZ_test_ecm240_1k.stdhep']
@@ -29,17 +32,21 @@ SIM.gun.multiplicity = 1
 # SIM.gun.distribution = 'uniform'
 # SIM.gun.energy = 10*GeV
 # SIM.gun.particle = "gamma"
-SIM.gun.momentumMin = 10.0*GeV-10*keV  #10.00000*GeV
-SIM.gun.momentumMax = 10.0*GeV+10*keV  #10.00001*GeV
+SIM.gun.momentumMin = 10.0*MeV-10*keV  #10.00000*GeV
+SIM.gun.momentumMax = 10.0*MeV+10*keV  #10.00001*GeV
 # SIM.gun.phiMin = 10*pi/180.0
 # SIM.gun.phiMax = 10*pi/180.0
 # SIM.gun.thetaMin = (90-10)*pi/180.0  
 
-SIM.action.calo = "SCEPCalSDAction_DRHit"
+if hitType == 'Simple':
+     SIM.action.calo = "SCEPCalSDAction_DRHitSimple"
+elif hitType == 'Full':
+     SIM.action.calo = "SCEPCalSDAction_DRHit"
+
 def setupEDM4hepOutputDR(dd4hepSimulation):
      from DDG4 import EventAction, Kernel
      dd = dd4hepSimulation
-     evt_edm4hep = EventAction(Kernel(), 'Geant4Output2EDM4hepDRCrystalHit/' + dd.outputFile, True)
+     evt_edm4hep = EventAction(Kernel(), 'Geant4Output2EDM4hepDRCrystalHitSimple/' + dd.outputFile, True)
      evt_edm4hep.Control = True
      output = dd.outputFile
      if not dd.outputFile.endswith(dd.outputConfig.myExtension):
@@ -70,7 +77,7 @@ SIM.filter.filters = {
 }
 
 SIM.action.calorimeterSDTypes = ['SegmentedCrystalCalorimeter']
-SIM.filter.calo = "edep1keV"
+SIM.filter.calo = "edep0"
 
 SIM.action.trackerSDTypes = ['tracker']
 SIM.action.tracker = (
