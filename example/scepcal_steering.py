@@ -82,20 +82,20 @@ settings = {
      'theta'    : [(10)*pi/180.0,(170)*pi/180.0],
      'phi'      : [(0)*pi/180.0, (360)*pi/180.0],
 
-     'compactFile': '../compact/SCEPCal.xml'
+     'compactFile': '/home/wonyongc/src/hep/SCEPCal-public/compact/SCEPCal.xml'
 }
 
 #~~~~~~~~~~~~~~ Settings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SIM.compactFile = settings['compactFile']
-SIM.numberOfEvents = settings['N']
+# SIM.compactFile = settings['compactFile']
+# SIM.numberOfEvents = settings['N']
 SIM.skipNEvents = 0
 
 prefix = f"{settings['particle']}_{settings['momentum']/GeV:1.0f}GeV_N{settings['N']}"
 
-SIM.outputFile =f"{prefix}.root"
+# SIM.outputFile =f"{prefix}.root"
 
-print(f"\nOutput file: {SIM.outputFile}\n")
+# print(f"\nOutput file: {SIM.outputFile}\n")
 
 #~~~~~~~~~~~~~~ Particle Gun ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if settings['gun']==True:
@@ -104,14 +104,14 @@ else:
      SIM.enableGun        = False
 SIM.gun.multiplicity = 1
 SIM.gun.distribution = 'uniform'
-SIM.gun.particle     = settings['particle']
+# SIM.gun.particle     = settings['particle']
 SIM.gun.position     = (0, 0, 0)
-SIM.gun.momentumMin  = settings['momentum']-settings['plusminus']
-SIM.gun.momentumMax  = settings['momentum']+settings['plusminus']
+# SIM.gun.momentumMin  = settings['momentum']-settings['plusminus']
+# SIM.gun.momentumMax  = settings['momentum']+settings['plusminus']
 SIM.gun.phiMin       = settings['phi'][0]
 SIM.gun.phiMax       = settings['phi'][1]
-SIM.gun.thetaMin     = settings['theta'][0]
-SIM.gun.thetaMax     = settings['theta'][1]
+# SIM.gun.thetaMin     = settings['theta'][0]
+# SIM.gun.thetaMax     = settings['theta'][1]
 
 #~~~~~~~~~~~~~~ MC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if settings['MC']==True:
@@ -136,8 +136,8 @@ SIM.filter.filters = {
 SIM.action.calorimeterSDTypes = ['calorimeter']
 SIM.action.mapActions["SCEPCal_MainLayer"]     = "SCEPCal_MainSDAction"
 SIM.action.mapActions["SCEPCal_TimingLayer"]   = "SCEPCal_TimingSDAction"
-SIM.filter.mapDetFilter['SCEPCal_MainLayer']   = 'edep'
-SIM.filter.mapDetFilter['SCEPCal_TimingLayer'] = 'edep'
+SIM.filter.mapDetFilter['SCEPCal_MainLayer']   = ""
+SIM.filter.mapDetFilter['SCEPCal_TimingLayer'] = ""
 
 #~~~~~~~~~~~~~~ Particles ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SIM.part.keepAllParticles                  = False
